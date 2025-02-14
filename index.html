@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Flo’s Mood Mixer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://core.colorsxstudios.com/wp-content/uploads/2021/03/ColorsXStudios_WebPic_LITTLE_SIMZ-2048x1152.jpg') no-repeat center center/cover;
+      color: white;
+      height: 100vh;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .container {
+       display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      background: rgba(237, 237, 237, 0.95);
+      color: black;
+        padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      margin-right: 5%;
+   
+    }
+    .title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+       text-align: center;
+      margin-bottom: 30px;
+    }
+    .mood-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .mood-button {
+      display: block;
+      width: 90%;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 1.2rem;
+      border: none;
+      background: #fff;
+      color: black;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.3s;
+      text-align: center;
+      font-weight: bold;
+    }
+    .mood-button:hover {
+      background: #f0f0f0;
+    }
+    .popup-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .popup-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .popup-content iframe {
+      width: 560px;
+      height: 315px;
+      border: none;
+    }
+    .close-button {
+      margin-top: 10px;
+      padding: 10px;
+      background: red;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Flo’s Mood Mixer 🎶</div>
+    <div class="subtitle">A Little Simz Song for Every Vibe<br>By Boo ❤️</div>
+    <div class="mood-title">How Do You Feel Today?</div>
+    <button class="mood-button" onclick="playRandomSong('happy')">Happy 😊</button>
+    <button class="mood-button" onclick="playRandomSong('sad')">Sad 😢</button>
+    <button class="mood-button" onclick="playRandomSong('confident')">Confident 🔥</button>
+    <button class="mood-button" onclick="playRandomSong('relaxed')">Relaxed 🌿</button>
+    <button class="mood-button" onclick="playRandomSong('thoughtful')">Thoughtful 🤔</button>
+  </div>
+  <div id="popup" class="popup-container">
+    <div class="popup-content">
+      <iframe id="player" src="" allowfullscreen></iframe>
+      <button class="close-button" onclick="closePopup()">Close</button>
+    </div>
+  </div>
+  <script>
+    const moodSongs = {
+       happy: [
+        "https://www.youtube.com/embed/tvY31eN3gtE?si=44WYZVHQJYWRc1Sj",
+        "https://www.youtube.com/embed/QpfpGwklQ6k?si=8Ynge6BO0Xihc4Wl",
+        "https://www.youtube.com/embed/zHGf6tmnLYE?si=U0TOiJc2UXH1H_IB",
+        "https://www.youtube.com/embed/4M4XOfXusuo?si=LLugGJWiPPE2KwkE"
+      ],
+      sad: [
+        "https://www.youtube.com/embed/fCjQ-Z9cZTc?si=zw0ZfTBCZwMOxSIv",
+        "https://www.youtube.com/embed/JBHXiN8y8hc?si=iZdplJ98-F2kCUw1",
+        "https://www.youtube.com/embed/5T4q06XDjlI?si=MZhoiC5plcR8JB-g"
+      ],
+      confident: [
+        "https://www.youtube.com/embed/Kh8Q2iytzns?si=TpyM6n8TShFfm1TL",
+        "https://www.youtube.com/embed/K7xzmkpwNoA?si=l2-KBuBJGVvsAzpN",
+        "https://www.youtube.com/embed/Iu2Lqpk4axg?si=-qYpbhRsg_2nFZS5"
+      ],
+      relaxed: [
+        "https://www.youtube.com/embed/6yDHX56frvE?si=zOnpZq9mLq1g03lN",
+        "https://www.youtube.com/embed/syaYvz2PCL0?si=W2esFsWmkfVWWmi6",
+        "https://www.youtube.com/embed/1DFLjUhbfFs?si=uwxvYzthjsUsxymt"
+      ],
+      thoughtful: [
+        "https://www.youtube.com/embed/hxfGQ2AJHGk?si=znH_zIMRiCdtIIRd",
+        "https://www.youtube.com/embed/GqwOCq0MXPU?si=2lPFim7FD1Krg6yD",
+       "https://www.youtube.com/embed/ZHjWeXZGmLo?si=J60FPXmkC1yDBl93"
+      ]
+    };
+
+    function playRandomSong(mood) {
+      const player = document.getElementById("player");
+      const popup = document.getElementById("popup");
+      if (!mood || !moodSongs[mood]) {
+        player.src = "";
+        return;
+      }
+      const songsForMood = moodSongs[mood];
+      const randomIndex = Math.floor(Math.random() * songsForMood.length);
+      player.src = songsForMood[randomIndex];
+      popup.style.display = "flex";
+    }
+
+    function closePopup() {
+      const popup = document.getElementById("popup");
+      popup.style.display = "none";
+      document.getElementById("player").src = "";
+    }
+  </script>
+</body>
+</html>
